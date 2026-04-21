@@ -1,6 +1,11 @@
 /*
-flow_types.h - flow_key_t
+    flow_types.h - flow_key_t and flow_record_t definitions
 
+    This is the contract between the C capture engine and the Python
+    inference engine. Any change to field order, type or padding WILL
+    break the Python ctypes struct and silently produce wrong feature values.
+    Do not modify without updating ids_app/inference/socket_reader.py in the
+    same commit.
 */
 #pragma once
 #include <stdint.h>
@@ -33,9 +38,9 @@ typedef struct
     float pkt_len_mean; // computed by AVX2 at finalisation
     uint32_t ack_flag_cnt;
     uint32_t psh_flag_cnt;
-    float pkt_len_std;  // population std, computed by AVX2
-    float bwd_pkt_len_std; // population std of bwd lengths
-    uint32_t fwd_seg_size_min; // min fwd payload length (TCP MSS proxy)
+    float pkt_len_std;          // population std, computed by AVX2
+    float bwd_pkt_len_std;      // population std of bwd lengths
+    uint32_t fwd_seg_size_min;  // min fwd payload length (TCP MSS proxy)
     uint32_t fwd_act_data_pkts; // fwd packets with payload_len > 0
 
     // UDP feature set
@@ -43,7 +48,7 @@ typedef struct
     uint64_t tot_bwd_bytes;
     uint16_t fwd_pkt_len_max;
     float flow_iat_mean; // mean inter-arrival time across all packets
-    float fwd_iat_std; // std of fwd inter-arrival times
+    float fwd_iat_std;   // std of fwd inter-arrival times
 
     // shared counters
     uint32_t tot_bwd_pkts;
@@ -74,7 +79,7 @@ typedef struct
     uint64_t all_iat_buf[256]; // all inter-arrival ns deltas
     uint32_t all_iat_buf_count;
     uint64_t last_pkt_ns_for_iat; // timestamp of previous packet (any direction)
-    uint64_t last_fwd_pkt_ns; // timestamp of previous fwd packet
+    uint64_t last_fwd_pkt_ns;     // timestamp of previous fwd packet
 
     // pipeline timing
     // t_enque_ns - wall-clock ns when the flow was copied into the IPC ring buffer
