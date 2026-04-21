@@ -192,12 +192,13 @@ void flow_table_expire(flow_table_t *t, uint64_t now_ns,
                        void (*cb)(flow_record_t *flow, void *ctx),
                        void *ctx)
 {
-    for (uint32_t i = 0; i < FLOW_TABLE_SIZE; i++) {
+    for (uint32_t i = 0; i < FLOW_TABLE_SIZE; i++)
+    {
         if (!t->occupied[i])
             continue;
-        if(t->slots[i].complete)
+        if (t->slots[i].complete)
             continue;
-        
+
         uint64_t idle = now_ns - t->slots[i].last_pkt_ns;
         uint64_t active = now_ns - t->slots[i].first_pkt_ns;
 

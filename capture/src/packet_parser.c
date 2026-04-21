@@ -70,14 +70,14 @@ int parse_packet(const uint8_t *buf, uint32_t caplen,
     // Ethernet II
     if (caplen < ETH_HDR_LEN)
         goto drop;
-    
+
     uint16_t ethertype;
     SAFE_READ_U16(buf, 12, caplen, ethertype);
 
     // Only IPv4; drop everything else
     if (ethertype != ETHERTYPE_IPV4)
         goto drop;
-    
+
     off = ETH_HDR_LEN;
 
     // IPv4
@@ -104,10 +104,11 @@ int parse_packet(const uint8_t *buf, uint32_t caplen,
     off += ip_hdr_len;
 
     // TCP
-    if (protocol == IP_PROTO_TCP) {
+    if (protocol == IP_PROTO_TCP)
+    {
         if (off + TCP_HDR_MIN_LEN > caplen)
             goto drop;
-        
+
         uint16_t src_port, dst_port;
         SAFE_READ_U16(buf, off + 0, caplen, src_port);
         SAFE_READ_U16(buf, off + 2, caplen, dst_port);
@@ -119,7 +120,7 @@ int parse_packet(const uint8_t *buf, uint32_t caplen,
             goto drop;
         if (off + tcp_hdr_len > caplen)
             goto drop;
-        
+
         uint8_t flags = buf[off + 13];
         uint16_t tcp_window;
         SAFE_READ_U16(buf, off + 14, caplen, tcp_window);
@@ -129,7 +130,7 @@ int parse_packet(const uint8_t *buf, uint32_t caplen,
         uint16_t payload_len = 0;
         if (ip total_len >= ip_hdr_len + tcp_hdr_len)
             payload_len = ip_total_len - (uint16_t)ip_hdr_len - (uint16_t)tcp_hdr_len;
-        
+
         out->src_ip = src_ip;
         out->dst_ip = dst_ip;
         out->src_port = src_port;
@@ -144,7 +145,8 @@ int parse_packet(const uint8_t *buf, uint32_t caplen,
     }
 
     // UDP
-    if (protocol == IP_PROTO_UDP) {
+    if (protocol == IP_PROTO_UDP)
+    {
         if (off + UDP_HDR_LEN > caplen)
             goto drop;
 
@@ -156,8 +158,8 @@ int parse_packet(const uint8_t *buf, uint32_t caplen,
         uint16_t udp_len;
         SAFE_READ_U16(buf, off + 4, caplen, udp_len);
         uint16_t payload_len = (udp_len >= UDP_HDR_LEN)
-                                ? udp_len - UDP_HDR_LEN
-                                : 0;
+                                   ? udp_len - UDP_HDR_LEN
+                                   : 0;
 
         out->src_ip = src_ip;
         out->dst_ip = dst_ip;

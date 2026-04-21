@@ -224,13 +224,16 @@ void features_finalise(flow_record_t *flow)
         A 10-packet SYN flood has the same syn_flag_ratio as a 10000-packet one
     */
     flow->fwd_pkts_per_sec = (flow->flow_duration_s > 0.0f)
-        ? (float)flow->tot_fwd_pkts / flow->flow_duration_s : 0.0f;
+                                 ? (float)flow->tot_fwd_pkts / flow->flow_duration_s
+                                 : 0.0f;
 
     flow->syn_flag_ratio = (flow->tot_pkts > 0)
-        ? (float)flow->syn_flag_cnt / (float)flow->tot_pkts : 0.0f;
+                               ? (float)flow->syn_flag_cnt / (float)flow->tot_pkts
+                               : 0.0f;
 
     flow->psh_flag_ratio = (flow->tot_pkts > 0)
-        ? (float)flow->psh_flag_cnt / (float)flow->tot_pkts : 0.0f;
+                               ? (float)flow->psh_flag_cnt / (float)flow->tot_pkts
+                               : 0.0f;
 
     flow->complete = 1;
 }
