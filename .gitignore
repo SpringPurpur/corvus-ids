@@ -1,5 +1,9 @@
 # Build artifacts
 capture/build/
+capture/cmake-build-*/
+capture/capture_engine
+capture/inspect_ipc
+capture/test_features
 
 # IDE
 .vscode/

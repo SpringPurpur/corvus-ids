@@ -1,0 +1,28 @@
+services:
+  monitor:
+    # Build configuration
+    build:
+      context: ./capture # Directory sent as build context
+      dockerfile: Dockerfile
+    container_name: ids_monitor
+    # Required for packet capture (admin for packet
+    # capture tools, operations & raw sockets)
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    network_mode: host # Necessary to share host's network namespace
+                       # in order to capture on real devices
+    environment: # env variables
+      - CAPTURE_INTERFACE=${CAPTURE_INTERFACE:-}
+    volumes: # Bind mount host to container
+      - ./capture:/app/capture
+      - ipc_socket:/tmp/ids_ipc
+    restart: "no" # No automatic restarts
+
+# In memory shared filesystem. Fast and cleared on container stop
+volumes:
+  ipc_socket:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
