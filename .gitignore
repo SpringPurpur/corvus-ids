@@ -5,5 +5,11 @@ capture/capture_engine
 capture/inspect_ipc
 capture/test_features
 
+# Environment variables
+.env
+
+# Capture JSON - generated at startup
+capture.json
+
 # IDE
 .vscode/
