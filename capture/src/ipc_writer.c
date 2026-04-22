@@ -117,7 +117,7 @@ static int connect_socket(void)
 */
 static int write_all(int fd, const void *buf, size_t n)
 {
-    const uint_8 *p = buf;
+    const uint8_t *p = buf;
     while (n > 0)
     {
         /*
@@ -190,7 +190,7 @@ static void *sender_thread(void *arg)
             Python reads the 4-byte length first to know how many bytes follow
         */
         int err = write_all(sock_fd, &payload_len, sizeof(payload_len));
-        if (err < 0)
+        if (err == 0)
         {
             /*
                 Socket broke (Python restarted, container stopped, etc.)

@@ -81,7 +81,7 @@ static void packet_callback(u_char *user, const struct pcap_pkthdr *hdr,
 
     // Convert pcap timeval to ns; pcap gives microsecond resolution,
     // multiply tv_usec by 1000 to get ns
-    uint64_t ts_ns = (uint64_t)hdr->ts.tv_sec * 1000000000ULL + (uint64_t)hdr->ts.tv.usec * 1000ULL;
+    uint64_t ts_ns = (uint64_t)hdr->ts.tv_sec * 1000000000ULL + (uint64_t)hdr->ts.tv_usec * 1000ULL;
 
     parsed_pkt_t pkt;
     if (!parse_packet(data, hdr->caplen, ts_ns, &pkt))

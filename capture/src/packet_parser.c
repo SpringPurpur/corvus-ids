@@ -30,7 +30,7 @@
 #define TCP_HDR_MIN_LEN 20
 
 // UDP header is always 8 bytes
-#define UDP_HDR_LEN
+#define UDP_HDR_LEN 8
 
 /*
     SAFE_READ_U16/SAFE_READ_U32 = bounds checked big-endian reads
@@ -49,21 +49,23 @@
             goto drop;                                \
         uint16_t _v;                                  \
         memcpy(&_v, (buf) + (off), 2);                \
+        (dst) = ntohs(_v);                            \
     } while (0)
 
 #define SAFE_READ_U32(buf, off, caplen, dst)          \
     do                                                \
     {                                                 \
-        if ((uint32_t)(off) + 2 > (uint32_t)(caplen)) \
+        if ((uint32_t)(off) + 4 > (uint32_t)(caplen)) \
             goto drop;                                \
         uint32_t _v;                                  \
         memcpy(&_v, (buf) + (off), 4);                \
+        (dst) = ntohs(_v);                            \
     } while (0)
 
 // Public API
 
 int parse_packet(const uint8_t *buf, uint32_t caplen,
-                 uint64_t ts_ns, parsed_packet_t *out)
+                 uint64_t ts_ns, parsed_pkt_t *out)
 {
     uint32_t off = 0;
 
@@ -93,7 +95,7 @@ int parse_packet(const uint8_t *buf, uint32_t caplen,
         goto drop;
 
     uint16_t ip_total_len;
-    SAFE_READ_U32(buf, off + 2, caplen, ip_total_len);
+    SAFE_READ_U16(buf, off + 2, caplen, ip_total_len);
 
     uint8_t protocol = buf[off + 9];
 
@@ -128,7 +130,7 @@ int parse_packet(const uint8_t *buf, uint32_t caplen,
         // payload length from IP total length, not caplen - avoids counting
         // padding bytes added by the NIC or capture layer
         uint16_t payload_len = 0;
-        if (ip total_len >= ip_hdr_len + tcp_hdr_len)
+        if (ip_total_len >= ip_hdr_len + tcp_hdr_len)
             payload_len = ip_total_len - (uint16_t)ip_hdr_len - (uint16_t)tcp_hdr_len;
 
         out->src_ip = src_ip;

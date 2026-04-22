@@ -86,7 +86,7 @@ void features_update(flow_record_t *flow, const parsed_pkt_t *pkt, int is_fwd)
             if (flow->fwd_iat_buf_count < 256)
                 flow->fwd_iat_buf[flow->fwd_iat_buf_count++] = delta;
         }
-        flow->last_pkt_ns = ts;
+        flow->last_fwd_pkt_ns = ts;
 
         // TCP specific
         if (pkt->protocol == 6)
@@ -209,7 +209,7 @@ void features_finalise(flow_record_t *flow)
         for (uint32_t i = 0; i < flow->fwd_iat_buf_count; i++)
         {
             double d = (double)flow->fwd_iat_buf[i] - mean;
-            sq_sum = d * d;
+            sq_sum += d * d;
         }
         flow->fwd_iat_std = (float)sqrt(sq_sum / flow->fwd_iat_buf_count);
     }

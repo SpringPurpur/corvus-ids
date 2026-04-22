@@ -58,7 +58,7 @@ select_interface() {
     # Mode 1 - explicit env var
     if [ -n "${CAPTURE_INTERFACE:-}" ]; then
         if ! ip link show "$CAPTURE_INTERFACE" &>/dev/null; then
-            echo "[monitor] ERROR: interface '$CAPTURE_ENGINE' not found" >&2
+            echo "[monitor] ERROR: interface '$CAPTURE_INTERFACE' not found" >&2
             echo "[monitor] Available interfaces:" >&2
             ip -o link show | awk -F': ' '{printf " %-16s %s\n", $2, $3}' >&2
             return 1

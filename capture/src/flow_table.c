@@ -76,7 +76,7 @@ static int normalise_key(flow_key_t *k)
     uint32_t tmp_ip = k->src_ip;
     k->src_ip = k->dst_ip;
     k->dst_ip = tmp_ip;
-    uint32_t tmp_port = k->src_port;
+    uint16_t tmp_port = k->src_port;
     k->src_port = k->dst_port;
     k->dst_port = tmp_port;
     return 0;
