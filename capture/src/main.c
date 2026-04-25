@@ -119,21 +119,12 @@ static void packet_callback(u_char *user, const struct pcap_pkthdr *hdr,
     }
 
     /*
-        Flow completion detection. Check for RST first (immediate), then
-        FIN (include the FIN packet)
+        Flow completion detection. Check for FIN and include the packet
     */
     if (pkt.protocol == 6)
     {
         uint8_t flags = pkt.tcp_flags;
 
-        if ((flags & 0x04) && !flow->complete)
-        {
-            // RST: include this packet and abort flow
-            features_finalise(flow);
-            ipc_writer_enqueue(flow);
-            flow_table_remove(&g_table, flow);
-            return;
-        }
         if ((flags & 0x01) && !flow->complete)
         {
             // FIN: include this packet, then complete
