@@ -153,7 +153,7 @@ void flow_table_remove(flow_table_t *t, flow_record_t *flow)
     t->occupied[slot] = 0;
 
     /*
-        Robin Hood repair: shift back any entries whose natural slot is at or
+        Repair: shift back any entries whose natural slot is at or
         before the freed slot. Without this, their probe chains would be broken
         and the entries would become unreachable
     */
@@ -175,8 +175,10 @@ void flow_table_remove(flow_table_t *t, flow_record_t *flow)
         else
             displaced = (free_slot + FLOW_TABLE_SIZE - natural) < (next_slot - natural + FLOW_TABLE_SIZE);
 
-        if (!displaced)
-            break;
+        if (!displaced) {
+            next_slot = (next_slot + 1) & (FLOW_TABLE_SIZE - 1);
+            continue;
+        }
 
         // move the entry back towards its natural slot
         t->slots[free_slot] = t->slots[next_slot];
