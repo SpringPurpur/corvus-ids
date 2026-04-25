@@ -59,7 +59,7 @@
             goto drop;                                \
         uint32_t _v;                                  \
         memcpy(&_v, (buf) + (off), 4);                \
-        (dst) = ntohs(_v);                            \
+        (dst) = ntohl(_v);                            \
     } while (0)
 
 // Public API
