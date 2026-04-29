@@ -54,10 +54,10 @@ class FlowRecord(ctypes.Structure):
         ("_pad1", ctypes.c_uint8 * 2), # align rst_flag_count to 4
         ("rst_flag_cnt", ctypes.c_uint32),
         ("bwd_pkts_per_sec", ctypes.c_float),
-        ("bwd_pkts_len_max", ctypes.c_uint16),
+        ("bwd_pkt_len_max", ctypes.c_uint16),
         ("_pad2", ctypes.c_uint8 * 2), # align tot_fwd_pkts to 4
         ("tot_fwd_pkts", ctypes.c_uint32),
-        ("tot_len_mean", ctypes.c_float),
+        ("pkt_len_mean", ctypes.c_float),
         ("ack_flag_cnt", ctypes.c_uint32),
         ("psh_flag_cnt", ctypes.c_uint32),
         ("pkt_len_std", ctypes.c_float),
@@ -143,7 +143,7 @@ def _record_to_dict(r: FlowRecord) -> dict[str, Any]:
         "pkt_len_mean": r.pkt_len_mean,
         "pkt_len_std": r.pkt_len_std,
         "flow_iat_mean": r.flow_iat_mean,
-        "fwd_iat_std": r.flow_iat_std,
+        "fwd_iat_std": r.fwd_iat_std,
         "fwd_pkts_per_sec": r.fwd_pkts_per_sec,
         
         # TCP-only OIF features
