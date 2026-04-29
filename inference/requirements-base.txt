@@ -1,0 +1,5 @@
+numpy
+scipy
+lightgbm
+scikit-learn
+shap
